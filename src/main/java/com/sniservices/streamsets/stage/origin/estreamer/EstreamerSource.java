@@ -34,10 +34,10 @@ import java.util.Map;
  * This source is an example and does not actually read from anywhere.
  * It does however, generate generate a simple record with one field.
  */
-public abstract class SampleSource extends BaseSource {
+public abstract class EstreamerSource extends BaseSource {
 
   /**
-   * Gives access to the UI configuration of the stage provided by the {@link SampleDSource} class.
+   * Gives access to the UI configuration of the stage provided by the {@link EstreamerDSource} class.
    */
   public abstract String getConfig();
 
@@ -49,7 +49,7 @@ public abstract class SampleSource extends BaseSource {
     if (getConfig().equals("invalidValue")) {
       issues.add(
           getContext().createConfigIssue(
-              Groups.SAMPLE.name(), "config", Errors.SAMPLE_00, "Here's what's wrong..."
+              Groups.ESTREAMER.name(), "config", Errors.ESTREAMER_00, "Here's what's wrong..."
           )
       );
     }

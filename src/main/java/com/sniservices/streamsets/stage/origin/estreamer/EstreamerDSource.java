@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.StageDef;
 @StageDef(
     version = 1,
     label = "Estreamer Origin",
-    description = "connect to an estreamer service ",
+    description = "connect to an Estreamer service ",
     icon = "default.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
@@ -36,15 +36,16 @@ import com.streamsets.pipeline.api.StageDef;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class SampleDSource extends SampleSource {
+
+public class EstreamerDSource extends EstreamerSource {
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "default",
-      label = "Sample Config",
+      label = "Estreamer Config",
       displayPosition = 10,
-      group = "SAMPLE"
+      group = "ESTREAMER"
   )
   public String config;
 

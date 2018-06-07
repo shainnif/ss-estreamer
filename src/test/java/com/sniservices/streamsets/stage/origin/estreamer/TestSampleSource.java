@@ -32,7 +32,7 @@ public class TestSampleSource {
 
   @Test
   public void testOrigin() throws Exception {
-    SourceRunner runner = new SourceRunner.Builder(SampleDSource.class)
+    SourceRunner runner = new SourceRunner.Builder(EstreamerDSource.class)
         .addConfiguration("config", "value")
         .addOutputLane("lane")
         .build();

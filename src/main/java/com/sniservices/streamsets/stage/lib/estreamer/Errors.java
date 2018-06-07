@@ -25,8 +25,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
 
-  SAMPLE_00("A configuration is invalid because: {}"),
-  SAMPLE_01("Specific reason writing record failed: {}"),
+  ESTREAMER_00("A configuration is invalid because: {}"),
+  ESTREAMER_01("Specific reason writing record failed: {}"),
   ;
   private final String msg;
 
