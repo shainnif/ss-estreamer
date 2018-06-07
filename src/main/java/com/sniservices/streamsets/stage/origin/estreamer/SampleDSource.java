@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.StageDef;
     version = 1,
     label = "Estreamer Origin",
     description = "connect to an estreamer service ",
-    icon = "cisco_logo.gif",
+    icon = "default.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     onlineHelpRefUrl = ""
