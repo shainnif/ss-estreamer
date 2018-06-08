@@ -77,3 +77,16 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+/target/maven-archiver/pom.properties
+estreamer.iml
+target/archive-tmp/
+target/classes/ElDefinitions.json
+target/classes/PipelineStages.json
+target/classes/data-collector-library-bundle.properties
+target/classes/datacollector-resource-bundles.json
+target/classes/default.png
+target/generated-sources/
+target/generated-test-sources/
+target/maven-archiver/
+target/maven-status/
+target/surefire-reports/
