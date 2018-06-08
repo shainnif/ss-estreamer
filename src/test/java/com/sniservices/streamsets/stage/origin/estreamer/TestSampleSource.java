@@ -35,7 +35,10 @@ public class TestSampleSource {
   public void testOrigin() throws Exception {
     SourceRunner runner = new SourceRunner.Builder(EstreamerDSource.class)
         .addConfiguration("config", "value")
-        .addConfiguration("ports", getPortList() )
+        .addConfiguration("port", "9999" )
+        .addConfiguration("serverName", "localhost" )
+        .addConfiguration("serverKey", "./server.key" )
+        .addConfiguration("serverCertificate", "./server.cert" )
         .addOutputLane("lane")
         .build();
 
@@ -55,8 +58,5 @@ public class TestSampleSource {
     }
   }
 
-  private List<String> getPortList(){
-    return Arrays.asList("9999");
-  }
 
 }

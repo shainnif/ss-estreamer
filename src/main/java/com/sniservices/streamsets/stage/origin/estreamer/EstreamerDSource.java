@@ -61,16 +61,16 @@ public class EstreamerDSource extends EstreamerSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.NUMBER,
+      type = ConfigDef.Type.STRING,
       label = "Port",
       defaultValue = "[\"9999\"]",
       description = "Port to connect to",
       group = "ESTREAMER",
       displayPosition = 5
     )
-    public Number port;
+    public String port;
 
-    public Number getPort(){
+    public String getPort(){
         return port;
     }
 
@@ -78,7 +78,7 @@ public class EstreamerDSource extends EstreamerSource {
             required = true,
             type = ConfigDef.Type.STRING,
             label = "Server",
-            defaultValue = "[\"9999\"]",
+            defaultValue = "[\"localhost.local\"]",
             description = "Server to connect to",
             group = "ESTREAMER",
             displayPosition = 6
