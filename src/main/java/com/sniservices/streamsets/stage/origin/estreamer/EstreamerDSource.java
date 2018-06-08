@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 
+import java.util.List;
+
 @StageDef(
     version = 1,
     label = "Estreamer Origin",
@@ -47,6 +49,8 @@ public class EstreamerDSource extends EstreamerSource {
       displayPosition = 10,
       group = "ESTREAMER"
   )
+
+
   public String config;
 
   /** {@inheritDoc} */
@@ -55,6 +59,64 @@ public class EstreamerDSource extends EstreamerSource {
     return config;
   }
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Port",
+      defaultValue = "[\"9999\"]",
+      description = "Port to connect to",
+      group = "ESTREAMER",
+      displayPosition = 5
+    )
+    public Number port;
 
+    public Number getPort(){
+        return port;
+    }
+
+    @ConfigDef(
+            required = true,
+            type = ConfigDef.Type.STRING,
+            label = "Server",
+            defaultValue = "[\"9999\"]",
+            description = "Server to connect to",
+            group = "ESTREAMER",
+            displayPosition = 6
+    )
+    public String serverName;
+
+    public String getServerName(){
+        return serverName;
+    }
+
+    @ConfigDef(
+            required = true,
+            type = ConfigDef.Type.STRING,
+            label = "Server Key",
+            defaultValue = "[\"Server.key\"]",
+            description = "Authentication key from Estreamer",
+            group = "ESTREAMER",
+            displayPosition = 7
+    )
+    public String serverKey;
+
+    public String getServerKey(){
+        return serverKey;
+    }
+
+    @ConfigDef(
+            required = true,
+            type = ConfigDef.Type.STRING,
+            label = "Server Certificate",
+            defaultValue = "[\"server.cert\"]",
+            description = "Server certificate to use for authentication ",
+            group = "ESTREAMER",
+            displayPosition = 8
+    )
+    public String serverCertificate; // string so we can listen on multiple ports in the future
+
+    public String getServerCertificate(){
+        return serverCertificate;
+    }
 
 }

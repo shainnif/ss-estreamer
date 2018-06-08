@@ -25,6 +25,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TestSampleSource {
@@ -34,6 +35,7 @@ public class TestSampleSource {
   public void testOrigin() throws Exception {
     SourceRunner runner = new SourceRunner.Builder(EstreamerDSource.class)
         .addConfiguration("config", "value")
+        .addConfiguration("ports", getPortList() )
         .addOutputLane("lane")
         .build();
 
@@ -51,6 +53,10 @@ public class TestSampleSource {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  private List<String> getPortList(){
+    return Arrays.asList("9999");
   }
 
 }
