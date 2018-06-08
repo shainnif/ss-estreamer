@@ -41,15 +41,6 @@ import java.util.List;
 
 public class EstreamerDSource extends EstreamerSource {
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "default",
-      label = "Estreamer Config",
-      displayPosition = 10,
-      group = "ESTREAMER"
-  )
-
 
   public String config;
 
@@ -63,7 +54,7 @@ public class EstreamerDSource extends EstreamerSource {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Port",
-      defaultValue = "[\"9999\"]",
+      defaultValue = "9999",
       description = "Port to connect to",
       group = "ESTREAMER",
       displayPosition = 5
@@ -78,7 +69,7 @@ public class EstreamerDSource extends EstreamerSource {
             required = true,
             type = ConfigDef.Type.STRING,
             label = "Server",
-            defaultValue = "[\"localhost.local\"]",
+            defaultValue = "localhost.local",
             description = "Server to connect to",
             group = "ESTREAMER",
             displayPosition = 6
@@ -93,7 +84,7 @@ public class EstreamerDSource extends EstreamerSource {
             required = true,
             type = ConfigDef.Type.STRING,
             label = "Server Key",
-            defaultValue = "[\"Server.key\"]",
+            defaultValue = "Server.key",
             description = "Authentication key from Estreamer",
             group = "ESTREAMER",
             displayPosition = 7
@@ -108,7 +99,7 @@ public class EstreamerDSource extends EstreamerSource {
             required = true,
             type = ConfigDef.Type.STRING,
             label = "Server Certificate",
-            defaultValue = "[\"server.cert\"]",
+            defaultValue = "server.cert",
             description = "Server certificate to use for authentication ",
             group = "ESTREAMER",
             displayPosition = 8
