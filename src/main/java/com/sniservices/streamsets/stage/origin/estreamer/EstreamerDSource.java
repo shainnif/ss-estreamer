@@ -41,6 +41,15 @@ import java.util.List;
 
 public class EstreamerDSource extends EstreamerSource {
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "default",
+      label = "Estreamer Config",
+      displayPosition = 10,
+      group = "ESTREAMER"
+  )
+
 
   public String config;
 
@@ -83,16 +92,16 @@ public class EstreamerDSource extends EstreamerSource {
     @ConfigDef(
             required = true,
             type = ConfigDef.Type.STRING,
-            label = "Server Key",
-            defaultValue = "Server.key",
-            description = "Authentication key from Estreamer",
+            label = "Cert Passphrase",
+            defaultValue = "Passphrase",
+            description = "Authentication Passphrase from Estreamer",
             group = "ESTREAMER",
-            displayPosition = 7
+            displayPosition = 8
     )
-    public String serverKey;
+    public String passphrase;
 
-    public String getServerKey(){
-        return serverKey;
+    public String getPassphrase(){
+        return passphrase;
     }
 
     @ConfigDef(
@@ -102,7 +111,7 @@ public class EstreamerDSource extends EstreamerSource {
             defaultValue = "server.cert",
             description = "Server certificate to use for authentication ",
             group = "ESTREAMER",
-            displayPosition = 8
+            displayPosition = 7
     )
     public String serverCertificate; // string so we can listen on multiple ports in the future
 

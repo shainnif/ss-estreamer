@@ -25,7 +25,6 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class TestSampleSource {
@@ -37,8 +36,8 @@ public class TestSampleSource {
         .addConfiguration("config", "value")
         .addConfiguration("port", "9999" )
         .addConfiguration("serverName", "localhost" )
-        .addConfiguration("serverKey", "./server.key" )
         .addConfiguration("serverCertificate", "./server.cert" )
+        .addConfiguration("passphrase", "Password" )
         .addOutputLane("lane")
         .build();
 
