@@ -1,34 +1,17 @@
-/**
- * Copyright 2015 StreamSets Inc.
- *
- * Licensed under the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.sniservices.streamsets.stage.origin.estreamer;
 
 import com.sniservices.streamsets.stage.lib.estreamer.Errors;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import org.apache.commons.exec.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * This source is an example and does not actually read from anywhere.
@@ -36,61 +19,94 @@ import java.util.Map;
  */
 public abstract class EstreamerSource extends BaseSource {
 
-  /**
-   * Gives access to the UI configuration of the stage provided by the {@link EstreamerDSource} class.
-   */
-  public abstract String getConfig();
+    private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+    private ExecuteWatchdog watchdog;
+    private Executor executor;
 
-  @Override
-  protected List<ConfigIssue> init() {
-    // Validate configuration values and open any required resources.
-    List<ConfigIssue> issues = super.init();
+    /**
+     * Gives access to the UI configuration of the stage provided by the {@link EstreamerDSource} class.
+     */
+    public abstract String getConfig();
 
-    if (getConfig().equals("invalidValue")) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ESTREAMER.name(), "config", Errors.ESTREAMER_00, "Here's what's wrong..."
-          )
-      );
+    @Override
+    protected List<ConfigIssue> init() {
+        // Validate configuration values and open any required resources.
+        List<ConfigIssue> issues = super.init();
+
+        if (getConfig().equals("invalidValue")) {
+            issues.add(
+                    getContext().createConfigIssue(
+                            Groups.ESTREAMER.name(), "config", Errors.ESTREAMER_00, "Here's what's wrong..."
+                    )
+            );
+        }
+
+        // If issues is not empty, the UI will inform the user of each configuration issue in the list.
+        return issues;
     }
 
-    // If issues is not empty, the UI will inform the user of each configuration issue in the list.
-    return issues;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void destroy() {
-    // Clean up any open resources.
-    super.destroy();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    // Offsets can vary depending on the data source. Here we use an integer as an example only.
-    long nextSourceOffset = 0;
-    if (lastSourceOffset != null) {
-      nextSourceOffset = Long.parseLong(lastSourceOffset);
+    /** {@inheritDoc} */
+    @Override
+    public void destroy() {
+        if (watchdog != null){
+            watchdog.destroyProcess();
+        }
+        super.destroy();
     }
 
-    int numRecords = 0;
+    /** {@inheritDoc} */
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) {
+        // Offsets can vary depending on the data source. Here we use an integer as an example only.
+        long nextSourceOffset = 0;
+        if (lastSourceOffset != null) {
+            nextSourceOffset = Long.parseLong(lastSourceOffset);
+        }
 
-    // TODO: As the developer, implement your logic that reads from a data source in this method.
 
-    // Create records and add to batch. Records must have a string id. This can include the source offset
-    // or other metadata to help uniquely identify the record itself.
-    while (numRecords < maxBatchSize) {
-      Record record = getContext().createRecord("some-id::" + nextSourceOffset);
-      Map<String, Field> map = new HashMap<>();
-      map.put("fieldName", Field.create("Some Value"));
-      record.set(Field.create(map));
-      batchMaker.addRecord(record);
-      ++nextSourceOffset;
-      ++numRecords;
+        try {
+
+            if ( executor == null ){
+                String cmd = "/usr/bin/tail -20f /var/log/system.log &";
+                CommandLine commandLine = CommandLine.parse(cmd);
+                DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+                executor = new DefaultExecutor();
+                watchdog = executor.getWatchdog();
+                executor.setExitValue(1);
+                executor.setStreamHandler(new PumpStreamHandler(new LogOutputStream() {
+                    @Override
+                    protected void processLine(String s, int i) {
+
+                        try {
+                            queue.put(s);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }));
+
+                executor.execute(commandLine, resultHandler);
+                Thread.sleep(1000);
+            }
+
+            if (queue.size() != 0) {
+                List<String> list = new ArrayList<>(maxBatchSize);
+                queue.drainTo(list);
+                for (String s : list) {
+                    Record record = getContext().createRecord("estreamer::" + nextSourceOffset);
+                    Map<String, Field> map = new HashMap<>();
+                    map.put("record", Field.create(s));
+                    record.set(Field.create(map));
+                    batchMaker.addRecord(record);
+                    ++nextSourceOffset;
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return String.valueOf(nextSourceOffset);
     }
-
-    return String.valueOf(nextSourceOffset);
-  }
 
 }
